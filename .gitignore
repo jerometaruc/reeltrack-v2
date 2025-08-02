@@ -1,5 +1,5 @@
 # Dependency and Build Output
-/dist
+dist
 /build
 dist-ssr
 node_modules
