@@ -13,12 +13,12 @@ export class ReelsResolver {
     return this.reelsService.create(createReelInput);
   }
 
-  @Query(() => [Reel])
+  @Query(() => [Reel], { name: 'reels' })
   findAll() {
     return this.reelsService.findAll();
   }
 
-  @Query(() => Reel)
+  @Query(() => Reel, { name: 'reel' })
   findOne(@Args('id') id: string) {
     return this.reelsService.findOne(id);
   }
