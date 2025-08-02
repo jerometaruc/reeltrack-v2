@@ -19,13 +19,13 @@ scalar DateTime
 
 type Query {
   findAll: [Reel!]!
-  findOne(id: Int!): Reel!
+  findOne(id: String!): Reel!
 }
 
 type Mutation {
   createReel(createReelInput: CreateReelInput!): Reel!
   updateReel(updateReelInput: UpdateReelInput!): Reel!
-  removeReel(id: Int!): Reel!
+  removeReel(id: String!): Reel!
 }
 
 input CreateReelInput {
@@ -40,5 +40,5 @@ input UpdateReelInput {
   year: Int
   director: String
   rating: Float
-  id: Int!
+  id: String!
 }

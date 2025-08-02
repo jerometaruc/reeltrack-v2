@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { ReelsService } from './reels.service';
 import { Reel } from './entities/reel.entity';
 import { CreateReelInput } from './dto/create-reel.input';
@@ -6,7 +6,7 @@ import { UpdateReelInput } from './dto/update-reel.input';
 
 @Resolver(() => Reel)
 export class ReelsResolver {
-  constructor(private readonly reelsService: ReelsService) {}
+  constructor(private readonly reelsService: ReelsService) { }
 
   @Mutation(() => Reel)
   createReel(@Args('createReelInput') createReelInput: CreateReelInput) {
@@ -19,7 +19,7 @@ export class ReelsResolver {
   }
 
   @Query(() => Reel)
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findOne(@Args('id') id: string) {
     return this.reelsService.findOne(id);
   }
 
@@ -29,7 +29,7 @@ export class ReelsResolver {
   }
 
   @Mutation(() => Reel)
-  removeReel(@Args('id', { type: () => Int }) id: number) {
+  removeReel(@Args('id') id: string) {
     return this.reelsService.remove(id);
   }
 }
