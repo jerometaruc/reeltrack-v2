@@ -1,9 +1,16 @@
+import { Route, Routes } from 'react-router';
+import HomePage from './pages/HomePage';
+import AddPage from './pages/AddPage';
+import DetailPage from './pages/DetailPage';
+
 function App() {
   return (
-    <div>
-      <p>ReelTrack V2</p>
-    </div>
-  )
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/add" element={<AddPage />} /> 
+      <Route path="/reel/:id" element={<DetailPage />} />
+    </Routes>
+  );
 }
 
-export default App
+export default App;
