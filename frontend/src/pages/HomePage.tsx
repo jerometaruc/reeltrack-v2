@@ -1,10 +1,11 @@
 import NavBar from "../components/NavBar";
+import ReelsNotFound from "../components/ReelsNotFound";
 
 function HomePage() {
     return (
         <div>
             <NavBar />
-            <p>Home Page</p>
+            <ReelsNotFound />
         </div>
     );
 };
