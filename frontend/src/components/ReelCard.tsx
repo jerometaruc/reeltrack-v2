@@ -1,60 +1,12 @@
-import { useMutation, gql } from '@apollo/client';
-import { PenSquareIcon, CircleCheckIcon } from "lucide-react";
+import { PenSquareIcon} from "lucide-react";
+import type { Reel } from '../types/Reel';
 import { Link } from "react-router";
-import toast from 'react-hot-toast';
-
-const DELETE_REEL = gql`
-    mutation DeleteReel($id: String!) {
-        removeReel(id: $id) {
-            id
-            title
-        }
-    }
-`;
-
-const GET_REELS = gql`
-    query GetReels {
-        reels {
-            id
-            title
-            year
-            director
-            rating
-        }
-    }
-`;
-
-interface Reel {
-    id: string;
-    title: string;
-    year: number;
-    director?: string;
-    rating?: number;
-}
 
 interface ReelCardProps {
     reel: Reel;
 }
 
 function ReelCard({ reel }: ReelCardProps) {
-    const [deleteReel, { loading: deleting }] = useMutation(DELETE_REEL, {
-        refetchQueries: [{ query: GET_REELS }],
-        onCompleted: () => {
-            toast.success("Watched and Deleted");
-        },
-        onError: (error) => {
-            console.error("Error in handleDelete", error);
-            toast.error("Failed to delete reel");
-        }
-    });
-
-    const handleDelete = () => {
-        if (!window.confirm("Watched and ready to delete?")) {
-            return;
-        }
-        deleteReel({ variables: { id: reel.id } });
-    };
-
     return (
         <div
             className="card bg-base-100 hover:shadow-lg transition-all duration-200 border-t-4 border-solid border-primary"
@@ -74,13 +26,6 @@ function ReelCard({ reel }: ReelCardProps) {
                         >
                             <PenSquareIcon className="size-4" />
                         </Link>
-                        <button
-                            className={`btn btn-ghost btn-xs text-success ${deleting ? 'loading' : ''}`}
-                            onClick={handleDelete}
-                            disabled={deleting}
-                        >
-                            <CircleCheckIcon className="size-4" />
-                        </button>
                     </div>
                 </div>
             </div>
