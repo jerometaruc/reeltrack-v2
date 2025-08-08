@@ -1,21 +1,10 @@
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import type { Reel } from "../types/Reel";
 import NavBar from "../components/NavBar";
 import ReelsNotFound from "../components/ReelsNotFound";
 import ReelCard from "../components/ReelCard";
 import { LoaderIcon } from "lucide-react";
-
-const GET_REELS = gql`
-    query GetReels {
-        reels {
-            id
-            title
-            year
-            director
-            rating
-        }
-    }
-`;
+import { GET_REELS } from "../gql/ReelQueries";
 
 interface GetReelsData {
     reels: Reel[];

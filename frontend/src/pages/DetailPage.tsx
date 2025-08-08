@@ -1,53 +1,11 @@
-import { gql, useQuery, useMutation } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import { useState, useEffect } from "react";
 import { ArrowLeftIcon, LoaderIcon, Trash2Icon } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router";
 import type { Reel } from "../types/Reel";
 import type { UpdateReelInput } from "../types/UpdateReelInput";
-
-const GET_REEL = gql`
-    query GetReel($id: String!) {
-        reel(id: $id) {
-            id
-            title
-            year
-            director
-            rating
-        }
-    }
-`;
-
-const UPDATE_REEL = gql`
-    mutation UpdateReel($id: String!, $updateReelInput: UpdateReelInput!) {
-        updateReel(id: $id, updateReelInput: $updateReelInput) {
-            id
-            title
-            year
-            director
-            rating
-        }
-    }
-`;
-
-const DELETE_REEL = gql`
-    mutation DeleteReel($id: String!) {
-        removeReel(id: $id) {
-            id
-        }
-    }
-`;
-
-const GET_REELS = gql`
-    query GetReels {
-        reels {
-            id
-            title
-            year
-            director
-            rating
-        }
-    }
-`;
+import { GET_REEL, GET_REELS } from "../gql/ReelQueries";
+import { DELETE_REEL, UPDATE_REEL } from "../gql/ReelMutations";
 
 interface GetReelData {
     reel: Reel;

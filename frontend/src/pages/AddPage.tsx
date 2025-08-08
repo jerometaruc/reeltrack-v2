@@ -1,33 +1,11 @@
-import { gql, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { useState } from "react";
 import { ArrowLeftIcon } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 import type { Reel } from "../types/Reel";
 import type { CreateReelInput } from "../types/CreateReelInput";
-
-const CREATE_REEL = gql`
-    mutation CreateReel($createReelInput: CreateReelInput!) {
-        createReel(createReelInput: $createReelInput) {
-            id
-            title
-            year
-            director
-            rating
-        }
-    }
-`;
-
-const GET_REELS = gql`
-    query GetReels {
-        reels {
-            id
-            title
-            year
-            director
-            rating
-        }
-    }
-`;
+import { CREATE_REEL } from "../gql/ReelMutations";
+import { GET_REELS } from "../gql/ReelQueries";
 
 interface CreateReelData {
     createReel: Reel;
