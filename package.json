@@ -1,0 +1,23 @@
+{
+  "name": "reeltrack-v2",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm install && npm install --prefix backend && npm install --prefix frontend",
+    "start": "concurrently \"npm run start:dev --prefix backend\" \"npm run dev --prefix frontend\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jerometaruc/reeltrack-v2.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jerometaruc/reeltrack-v2/issues"
+  },
+  "homepage": "https://github.com/jerometaruc/reeltrack-v2#readme",
+  "description": "",
+  "dependencies": {
+    "concurrently": "^9.2.0"
+  }
+}
