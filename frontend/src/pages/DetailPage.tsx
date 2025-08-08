@@ -1,135 +1,41 @@
-import { useQuery, useMutation } from "@apollo/client";
-import { useState, useEffect } from "react";
 import { ArrowLeftIcon, LoaderIcon, Trash2Icon } from "lucide-react";
-import { Link, useNavigate, useParams } from "react-router";
-import type { Reel } from "../types/Reel";
-import type { UpdateReelInput } from "../types/UpdateReelInput";
-import { GET_REEL, GET_REELS } from "../gql/ReelQueries";
-import { DELETE_REEL, UPDATE_REEL } from "../gql/ReelMutations";
-
-interface GetReelData {
-    reel: Reel;
-}
-
-interface GetReelVariables {
-    id: string;
-}
-
-interface UpdateReelData {
-    updateReel: Reel;
-}
-
-interface UpdateReelVariables {
-    id: string;
-    updateReelInput: UpdateReelInput;
-}
-
-interface DeleteReelData {
-    removeReel: Reel;
-}
-
-interface DeleteReelVariables {
-    id: string;
-}
+import { Link, useParams } from "react-router";
+import { useReel, useUpdateReel, useDeleteReel } from "../hooks/useReels";
+import { useReelForm } from "../hooks/useReelForm";
 
 function DetailPage() {
-    const [title, setTitle] = useState<string>("");
-    const [year, setYear] = useState<string>("");
-    const [director, setDirector] = useState<string>("");
-    const [rating, setRating] = useState<string>("");
-
-    const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
 
-    const { data, loading, error } = useQuery<GetReelData, GetReelVariables>(
-        GET_REEL,
-        {
-            variables: { id: id! },
-            skip: !id,
-            onError: (error) => {
-                console.error("Error fetching reel:", error);
-            }
-        }
-    );
+    const { reel, loading, error } = useReel(id);
 
-    const [updateReel, { loading: saving }] = useMutation<UpdateReelData, UpdateReelVariables>(
-        UPDATE_REEL,
-        {
-            refetchQueries: [{ query: GET_REELS }],
-            onCompleted: () => {
-                navigate("/");
-            },
-            onError: (error) => {
-                console.error("Error updating reel:", error);
-            }
-        }
-    );
+    const {
+        title,
+        year,
+        director,
+        rating,
+        setTitle,
+        setYear,
+        setDirector,
+        setRating,
+        validateForm,
+        getUpdateInput
+    } = useReelForm({ initialReel: reel });
 
-    const [deleteReel] = useMutation<DeleteReelData, DeleteReelVariables>(
-        DELETE_REEL,
-        {
-            refetchQueries: [{ query: GET_REELS }],
-            onCompleted: () => {
-                navigate("/");
-            },
-            onError: (error) => {
-                console.error("Error deleting reel:", error);
-            }
-        }
-    );
-
-    useEffect(() => {
-        if (data?.reel) {
-            setTitle(data.reel.title);
-            setYear(data.reel.year.toString());
-            setDirector(data.reel.director || "");
-            setRating(data.reel.rating?.toString() || "");
-        }
-    }, [data]);
+    const { updateReel, loading: saving } = useUpdateReel();
+    const { deleteReel } = useDeleteReel();
 
     const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (!title.trim() || !year.trim()) {
-            console.error("Title and year are required");
-            return;
-        }
+        if (!validateForm() || !id) return;
 
-        if (!id) return;
-
-        const yearNumber = parseInt(year);
-        if (isNaN(yearNumber)) {
-            console.error("Invalid year");
-            return;
-        }
-
-        const input: UpdateReelInput = {
-            title: title.trim(),
-            year: yearNumber,
-        };
-
-        if (director.trim()) {
-            input.director = director.trim();
-        }
-
-        if (rating.trim()) {
-            const ratingNumber = parseFloat(rating);
-            if (!isNaN(ratingNumber) && ratingNumber >= 0 && ratingNumber <= 10) {
-                input.rating = ratingNumber;
-            }
-        }
-
-        await updateReel({ variables: { id, updateReelInput: input } });
+        const input = getUpdateInput();
+        await updateReel(id, input);
     };
 
     const handleDelete = async () => {
-        if (!window.confirm("Confirm delete?")) {
-            return;
-        }
-
         if (!id) return;
-
-        await deleteReel({ variables: { id } });
+        await deleteReel(id);
     };
 
     if (loading) {
@@ -140,7 +46,7 @@ function DetailPage() {
         );
     }
 
-    if (error || !data?.reel) {
+    if (error || !reel) {
         return (
             <div className="min-h-screen bg-base-200">
                 <div className="container mx-auto px-4 py-8">

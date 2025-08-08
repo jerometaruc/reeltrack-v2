@@ -1,63 +1,31 @@
-import { useMutation } from "@apollo/client";
-import { useState } from "react";
 import { ArrowLeftIcon } from "lucide-react";
-import { Link, useNavigate } from "react-router";
-import type { Reel } from "../types/Reel";
-import type { CreateReelInput } from "../types/CreateReelInput";
-import { CREATE_REEL } from "../gql/ReelMutations";
-import { GET_REELS } from "../gql/ReelQueries";
-
-interface CreateReelData {
-    createReel: Reel;
-}
-
-interface CreateReelVariables {
-    createReelInput: CreateReelInput;
-}
+import { Link } from "react-router";
+import { useReelForm } from "../hooks/useReelForm";
+import { useCreateReel } from "../hooks/useReels";
 
 function AddPage() {
-    const [title, setTitle] = useState<string>("");
-    const [year, setYear] = useState<string>("");
-    const [director, setDirector] = useState<string>("");
-    const [rating, setRating] = useState<string>("");
+    const {
+        title,
+        year,
+        director,
+        rating,
+        setTitle,
+        setYear,
+        setDirector,
+        setRating,
+        validateForm,
+        getCreateInput
+    } = useReelForm();
 
-    const navigate = useNavigate();
-
-    const [createReel, { loading }] = useMutation<CreateReelData, CreateReelVariables>(
-        CREATE_REEL,
-        {
-            refetchQueries: [{ query: GET_REELS }],
-            onCompleted: () => {
-                navigate("/");
-            },
-            onError: (error) => {
-                console.error("Error creating reel:", error);
-            }
-        }
-    );
+    const { createReel, loading } = useCreateReel();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        
-        const yearNumber = parseInt(year);
 
-        const input: CreateReelInput = {
-            title: title.trim(),
-            year: yearNumber,
-        };
+        if (!validateForm()) return;
 
-        if (director.trim()) {
-            input.director = director.trim();
-        }
-
-        if (rating.trim()) {
-            const ratingNumber = parseFloat(rating);
-            if (!isNaN(ratingNumber) && ratingNumber >= 0 && ratingNumber <= 10) {
-                input.rating = ratingNumber;
-            }
-        }
-
-        await createReel({ variables: { createReelInput: input } });
+        const input = getCreateInput();
+        await createReel(input);
     };
 
     return (

@@ -1,18 +1,11 @@
-import { useQuery } from "@apollo/client";
-import type { Reel } from "../types/Reel";
 import NavBar from "../components/NavBar";
 import ReelsNotFound from "../components/ReelsNotFound";
 import ReelCard from "../components/ReelCard";
 import { LoaderIcon } from "lucide-react";
-import { GET_REELS } from "../gql/ReelQueries";
-
-interface GetReelsData {
-    reels: Reel[];
-}
+import { useReels } from "../hooks/useReels";
 
 function HomePage() {
-    const { data, loading, error } = useQuery<GetReelsData>(GET_REELS);
-    const reels = data?.reels || [];
+    const { reels, loading, error } = useReels();
 
     if (loading) {
         return (
