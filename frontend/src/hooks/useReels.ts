@@ -66,7 +66,7 @@ export const useUpdateReel = () => {
 
     const [updateReel, { loading }] = useMutation<
         { updateReel: Reel },
-        { id: string; updateReelInput: UpdateReelInput }
+        { updateReelInput: UpdateReelInput }
     >(UPDATE_REEL, {
         refetchQueries: [{ query: GET_REELS }],
         onCompleted: () => {
@@ -78,7 +78,8 @@ export const useUpdateReel = () => {
     });
 
     const handleUpdateReel = async (id: string, input: UpdateReelInput) => {
-        await updateReel({ variables: { id, updateReelInput: input } });
+        const updatedInput = { ...input, id };
+        await updateReel({ variables: { updateReelInput: updatedInput } });
     };
 
     return {

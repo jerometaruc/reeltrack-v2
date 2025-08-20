@@ -13,8 +13,8 @@ export const CREATE_REEL = gql`
 `;
 
 export const UPDATE_REEL = gql`
-    mutation UpdateReel($id: String!, $updateReelInput: UpdateReelInput!) {
-        updateReel(id: $id, updateReelInput: $updateReelInput) {
+    mutation UpdateReel($updateReelInput: UpdateReelInput!) {
+        updateReel(updateReelInput: $updateReelInput) {
             id
             title
             year
